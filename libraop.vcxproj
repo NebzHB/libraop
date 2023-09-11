@@ -16,7 +16,9 @@
     <ClCompile Include="src\aes_ctr.c" />
     <ClCompile Include="src\alac.c" />
     <ClCompile Include="src\base64.c" />
+    <ClCompile Include="src\bplist.cpp" />
     <ClCompile Include="src\cliraop.c" />
+    <ClCompile Include="src\pairing.cpp" />
     <ClCompile Include="src\raop_client.c" />
     <ClCompile Include="src\raop_server.c" />
     <ClCompile Include="src\raop_streamer.c" />
@@ -40,10 +42,15 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>  
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>  
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup>
-    <TargetName>$(ProjectName)</TargetName>
     <IntDir>$(SolutionDir)\build\Win32-$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\lib\win32\$(PlatformTarget)\</OutDir>
   </PropertyGroup>
@@ -58,6 +65,18 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>    
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -66,7 +85,11 @@
       <AdditionalIncludeDirectories>crosstools\src;dmap-parser;libmdns\targets\include\mdnssvc;libmdns\targets\include\mdnssd;libcodecs\targets\include\flac;libcodecs\targets\include\shine;libcodecs\targets\include\addons;libpthreads4w\targets\win32\x86\include;libopenssl\targets\win32\x86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <DisableSpecificWarnings>4267;4244;5105</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
