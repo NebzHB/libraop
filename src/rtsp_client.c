@@ -501,8 +501,8 @@ bool rtspcl_auth_setup(struct rtspcl_s *p) {
 	if (!p) return false;
 
 	uint8_t secret[SECRET_KEY_SIZE], * pub_key = malloc(PUBLIC_KEY_SIZE + 1);
-	uint8_t* rsp;
-	int rsp_len;
+	uint8_t* rsp = NULL;  // Initialize to NULL - may not be set if no response body
+	int rsp_len = 0;
 
 	// create a verification public key
 	RAND_bytes(secret, SECRET_KEY_SIZE);
@@ -659,8 +659,12 @@ static bool exec_request(struct rtspcl_s *rtspcld, char *cmd, char *content_type
 
 	token = strtok(line, delimiters);
 	token = strtok(NULL, delimiters);
+
+	// ignore 501 when used with OPTIONS
 	if (token == NULL || strcmp(token, "200")) {
-		LOG_ERROR("[%p]: <------ : request failed, error %s", rtspcld, line);
+		if (token == NULL || strcmp(token, "501") || strcmp(cmd, "OPTIONS")) {
+			LOG_ERROR("[%p]: <------ : request failed, error %s %s", rtspcld, line, (token ? token : ""));
+		}
 		if (get_response == 1) return false;
 	} else {
 		LOG_DEBUG("[%p]: <------ : %s: request ok", rtspcld, token);
